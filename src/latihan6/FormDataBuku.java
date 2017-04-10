@@ -21,6 +21,7 @@ public class FormDataBuku extends javax.swing.JFrame {
     
   private void InitTable(){
         model = new DefaultTableModel();
+        model.addColumn("ID_BUKU");
         model.addColumn("Judul");
         model.addColumn("Penulis");
         model.addColumn("Harga");
@@ -34,10 +35,11 @@ public class FormDataBuku extends javax.swing.JFrame {
           stt = con.createStatement();
           rss = stt.executeQuery(sql);
           while(rss.next()){
-              Object[] o = new Object[3];
-              o[0] = rss.getString("judul");
-              o[1] = rss.getString("penulis");
-              o[2] = rss.getInt("harga");
+              Object[] o = new Object[4];
+              o[0] = rss.getString("id");
+              o[1] = rss.getString("judul");
+              o[2] = rss.getString("penulis");
+              o[3] = rss.getInt("harga");
               model.addRow(o);
           }
       }catch(SQLException e){
@@ -55,6 +57,29 @@ public class FormDataBuku extends javax.swing.JFrame {
             System.out.println(e.getMessage());
         }
     }
+  
+  public boolean UbahData(String id, String judul, String penulis, String harga){
+      try{
+          String sql = "UPDATE buku set judul='"+judul+"', penulis='"+penulis+"', harga="+harga+"WHERE id="+id+";";
+          stt = con.createStatement();
+          stt.executeUpdate(sql);
+          return true;
+      }catch(SQLException e){
+          System.out.println(e.getMessage());
+          return false;
+      }
+  }
+  public boolean HapusData(String id){
+      try{
+          String sql = "DELETE from buku WHERE id="+id+";";
+          stt = con.createStatement();
+          stt.executeUpdate(sql);
+          return true;
+      }catch(SQLException e){
+          System.out.println(e.getMessage());
+          return false;
+      }
+  }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -213,6 +238,11 @@ public class FormDataBuku extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         txtCari.addActionListener(new java.awt.event.ActionListener() {
@@ -296,7 +326,16 @@ TampilData();
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        
+        int baris = jTable1.getSelectedRow();
+        String id = jTable1.getValueAt(baris, 0).toString();
+        String judul = txtJudul.getText();
+        String penulis = cmbPenulis.getSelectedItem().toString();
+        String harga = txtHarga.getText();
+        if(UbahData(id, judul, penulis, harga))
+        JoptionPane.showMessageDialog(null, "Berhasil Ubah Data");
+        else
+            JoptionPane.showConfirmDialog(null, "Gagal Ubah Data");
+        InitTable();TampilData();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariActionPerformed
@@ -340,6 +379,16 @@ TampilData();
         // TODO add your handling code here:
         
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int baris = jTable1.getSelectedRow();
+        
+        txtJudul.setText(jTable1.getValueAt(baris, 1).toString());
+        cmbPenulis.setSelectedItem(jTable1.getValueAt(baris,2).toString());
+        txtHarga.setText(jTable1.getValueAt(baris, 3).toString());
+        
+    }//GEN-LAST:event_jTable1MouseClicked
 
     /**
      * @param args the command line arguments

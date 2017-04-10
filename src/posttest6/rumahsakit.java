@@ -65,7 +65,7 @@ private DefaultTableModel model;
             String sql = "INSERT INTO rumahsakit VALUES(NULL,'"+nama_pasien+"','"+tanggallahir+"','"+usia+"','"+jeniskelamin+"','"+diagnosa+"','"+dokter+"','"+ruangan+"','"+tanggalmasuk+"')";
             stt = con.createStatement();
             stt.executeUpdate(sql);
-                model.addRow(new Object[]{nama_pasien,tanggallahir,usia,jeniskelamin,dokter,ruangan,tanggalmasuk});
+                model.addRow(new Object[]{nama_pasien,tanggallahir,usia,jeniskelamin,diagnosa,dokter,ruangan,tanggalmasuk});
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
